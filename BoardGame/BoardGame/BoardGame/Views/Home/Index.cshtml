@@ -1,0 +1,84 @@
+﻿@using WebMatrix.Data;
+
+@{
+    var db = Database.Open("BoardGame");
+    var sGName = Request.Form["searchGameName"];
+    var sDate = Request.Form["searchDate"];
+    // prepare SQL and data variables
+    var sql = "";
+    var data = new List<dynamic>();
+
+    // define query
+    if (String.IsNullOrEmpty(sGName) && String.IsNullOrEmpty(sDate))
+    {
+        // show all games
+        sql = @"SELECT BGGId, Name, Description, YearPublished, GameWeight, ImagePath
+        FROM BoardGame
+        ORDER BY Name ASC";
+        data = db.Query(sql).ToList();
+    }
+
+    // show filtered by Name
+    else if (!String.IsNullOrEmpty(sGName))
+    {
+        sql = @"SELECT BGGId, Name, Description, YearPublished, GameWeight, ImagePath
+        FROM BoardGame
+        WHERE Name LIKE CONCAT(@0, '%')
+        ORDER BY Name ASC";
+        data = db.Query(sql, sGName).ToList();
+    }
+    else
+    {
+        // show filtered by date
+        sql = @"SELECT BGGId, Name, Description, YearPublished, GameWeight, ImagePath
+            FROM BoardGame
+            WHERE YearPublished = @0
+            ORDER BY Name ASC";
+        data = db.Query(sql, sDate).ToList();
+    }
+}
+
+<form method="post" action="/Home/Index">
+    <div>
+        <input type="text" placeholder="search by name" name="searchGameName" />
+        <input type="number" name="searchDate" placeholder="Search by year" />
+        <input type="submit" value="Search" />
+    </div>
+</form>
+
+<div class="card text-bg-light py-1 mt-2">
+    <h2 class="text-center">Collection of Board Game</h2>
+</div>
+
+<table class="table table-striped">
+    @if (data != null && data.Any())
+    {
+        <thead>
+            <tr>
+                <th>BGGId</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>YearPublished</th>
+                <th>GameWeight</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in data)
+            {
+                <tr>
+                    <td>@row.BGGId</td>
+                    <td>@row.Name</td>
+                    <td>@row.Description</td>
+                    <td>@row.YearPublished</td>
+                    <td>@row.GameWeight</td>
+                    <td><img src="@row.ImagePath" alt="@row.Name" style="width:80px; height:auto;" /></td>
+                </tr>
+            }
+        </tbody>
+    }
+    else
+    {
+        <tr><td colspan="6" class="text-center text-danger">Oops! No records were returned ...</td></tr>
+    }
+</table>
