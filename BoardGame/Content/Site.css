@@ -1,24 +1,110 @@
-﻿/* Set padding to keep content from hitting the edges */
+﻿/* Set padding to keep content from hitting the edges 
 .body-content {
     margin-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
+ Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
-*/
+
 .dl-horizontal dt {
     white-space: normal;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
+ Set width on the form input elements since they're 100% wide by default 
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 500px;
 }
 
+
+
+/* labels for search fields */
+.search-container label {
+    font-weight: 600;
+    color: #333;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* input boxes (name + ID) */
+.search-container input[type="text"] {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Input focus effect */
+.search-container input[type="text"]:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.3);
+    outline: none;
+}
+
+/* Search button styling */
+.search-container button {
+    display: inline-block;
+    background-color: #0d6efd;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.search-container button:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
+}
+
+/*background style*/
 body {
-    background-color: #f8f9fa; /* light grey */
+    background-color: powderblue;
+}
+/*table style*/
+.table {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* table header */
+.table thead {
+    background-color: #004085;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+/* table body rows */
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: #e6f2ff;
+}
+
+
+.table th, .table td {
+    vertical-align: middle;
+    font-size: 15px;
+    padding: 10px;
+}
+
+.table img {
+    width: 80px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
