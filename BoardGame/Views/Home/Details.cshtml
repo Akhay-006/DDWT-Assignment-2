@@ -1,7 +1,20 @@
-﻿
+﻿@using WebMatrix.Data;
+
 @{
-    ViewBag.Title = "Detail";
+    var db = Database.Open("BoardGame");
+    var id = Request.QueryString["id"];
+    var sql = "SELECT b.*, c.Category, agg.AV, agg.VR FROM BoardGame AS b " +
+              "INNER JOIN GameCategory AS gc ON b.BGGId = gc.BGGId " +
+              "INNER JOIN Category AS c ON gc.Category = c.CategoryID " +
+              "LEFT JOIN (SELECT BGGId, ROUND(AVG(Rating), 1) AS AV, COUNT(Rating) AS VR " +
+              "FROM UserRating " +
+              "GROUP BY BGGId) AS agg ON b.BGGId = agg.BGGId " +
+              "WHERE b.BGGId = @0";
+    var row = db.QuerySingle(sql, id);
 }
 
-<h2>Detail</h2>
+@*Page Header*@
+<div class="card text-bg-light py-1 mt-2">
+    <h2 class="text-center">Game Detail</h2>
+</div>
 
