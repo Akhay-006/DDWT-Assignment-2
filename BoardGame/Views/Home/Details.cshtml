@@ -13,8 +13,75 @@
     var row = db.QuerySingle(sql, id);
 }
 
-@*Page Header*@
+<!--Page Header-->
 <div class="card text-bg-light py-1 mt-2">
     <h2 class="text-center">Game Detail</h2>
 </div>
 
+
+<!-- Product Display -->
+<div class="row justify-content-center">
+    <div class="col-10">
+        @if (row != null)
+        {
+            <div class="card col-md-12 m-2 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><b>Game Id: </b> @row.BGGId</h5>
+                    <h5 class="card-title"><b>Game Name: </b> @row.Name</h5>
+                    <p class="card-text text-truncate"><b>Game Descrip: </b>@row.Description</p>
+
+                    @if (row.YearPublished != null)
+                    {
+                        <p class="card-text"><b>Year Published: </b> @row.YearPublished</p>
+                    }
+                    <p class="card-text"><b>Game Weight: </b>@row.GameWeight</p>
+                    <p class="card-text"><b>Min Players: </b> @row.MinPlayers</p>
+                    <p class="card-text"><b>Max Players: </b>@row.MaxPlayers</p>
+
+                    @if (row.ComAgeRec != null)
+                    {
+                        <p class="card-text"><b>Age: </b>@row.ComAgeRec</p>
+                    }
+                    @if (row.LanguageEase != null)
+                    {
+                        <p class="card-text"><b>Language Ease: </b>@row.LanguageEase</p>
+                    }
+                    <p class="card-text"><b>Best Players: </b>@row.BestPlayers</p>
+                    <p class="card-text"><b>Number Owned:</b> @row.NumOwned</p>
+                    <p class="card-text"><b>Number Want: </b>@row.NumWant</p>
+                    <p class="card-text"><b>Number Wish: </b>@row.NumWish</p>
+                    <p class="card-text"><b>Mfg Playtime: </b>@row.MfgPlaytime</p>
+                    <p class="card-text"><b>Com Min Playtime: </b>@row.ComMinPlaytime</p>
+                    <p class="card-text"><b>Com Max Playtime: </b>@row.ComMaxPlaytime</p>
+                    <p class="card-text"><b>Mfg Age Rec: </b>@row.MfgAgeRec</p>
+                    <p class="card-text"><b>Number Alternates: </b>@row.NumAlternates</p>
+                    <p class="card-text"><b>Number Expansions: </b>@row.NumExpansions</p>
+                    <p class="card-text"><b>Number Implementations: </b>@row.NumImplementations</p>
+
+                    @if (row.Family != null)
+                    {
+                        <p class="card-text"><b>Family: </b>@row.Family</p>
+                    }
+                    <p class="card-text"><b>Rank in Board Game: </b>@row.RankInboardgame</p>
+                    <p class="card-text"><b>Rank in Strategy Games: </b>@row.RankInstrategygames</p>
+                    <p class="card-text"><b>Rank in Family Games: </b>@row.RankInfamilygames</p>
+                    <p class="card-text"><b>Rank in Thematic: </b>@row.RankInthematic</p>
+
+                    <p><b>Average Rating:</b> @(row.AV ?? 0)</p>
+                    <p><b>Valuable Reviews:</b> @(row.VR ?? 0)</p>
+                    <img src="@row.ImagePath" class="img-fluid" alt="@row.Name">
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <h2 class="text-danger text-center mt-4">Ooops - That product was not found!</h2>
+            <div class="text-center">
+                <img src="/images/sad-homer.png" alt="Not found" width="250" />
+            </div>
+        }
+    </div>
+</div>
+
+<link href="~/Content/Site.css" rel="stylesheet" />

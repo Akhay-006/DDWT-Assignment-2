@@ -31,7 +31,7 @@
                 "ORDER BY b.Name ASC ";
         data = db.Query(sql, sGName).ToList();
     }
-    // Search by game Category 
+    // Search by game Category
     else if (String.IsNullOrEmpty(sGName) && !String.IsNullOrEmpty(gCategory))
     {
         sql = "SELECT Distinct b.* FROM BoardGame As b " +
@@ -52,7 +52,7 @@
         data = db.Query(sql, sGName, gCategory).ToList();
     }
 
-   
+
 }
 <!--search button-->
 <form method="post" action="/Home/Index" class="search-container text-center mb-2">
@@ -90,7 +90,7 @@
     <h2 class="text-center">Collection of Board Games</h2>
 </div>
 <!--table-->
-<div id="tableView" class="col-12 mx-auto mt-2">
+<div id="tableView" class="col-12 mx-auto mt-2" style="display: block;">
     <table class="table table-bordered">
         @if (data.Any())
         {
@@ -157,19 +157,19 @@
                         <td>@row.RankInfamilygames</td>
                         <td>@row.RankInthematic</td>
                         <td><img src="@row.ImagePath" class="img-fluid" alt="@row.Name"></td>
-                        <td> <a href="/Home/Details?id=@row.BGGId" class="btn btn-secondary btn-sm">Detail</a></td>
+                        <td> <a href="/Home/Details?id=@row.BGGId" class="btn btn-primary btn-sm">Game Detail</a></td>
                     </tr>
                 }
             </tbody>
         }
         else
         {
-            <tr><td colspan="8" class="text-center text-danger">Oops! No records were found ...</td></tr>
+            <tr><td colspan="27" class="text-center text-danger">Oops! No records were found ...</td></tr>
         }
     </table>
 </div>
 <!--card-->
-<div id="cardView" class="row justify-content-center">
+<div id="cardView" class="row justify-content-center" style="display: none;">
     @foreach (var row in data)
     {
         <div class="card col-md-3 m-2 shadow-sm">
@@ -200,22 +200,22 @@
                 <p class="card-text">Rank in Strategy Games: @row.RankInstrategygames</p>
                 <p class="card-text">Rank in Family Games: @row.RankInfamilygames</p>
                 <p class="card-text">Rank in Thematic: @row.RankInthematic</p>
-                <a href="/Home/Details?id=@row.BGGId" class="btn btn-secondary">Game Detail</a>
+                <a href="/Home/Details?id=@row.BGGId" class="btn btn-primary">Game Detail</a>
             </div>
         </div>
     }
 </div>
 
 <script>document.getElementById("showTable").onclick = function () {
-        document.getElementById("view").value = "table";
         document.getElementById("tableView").style.display = "block";
         document.getElementById("cardView").style.display = "none";
     };
 
     document.getElementById("showCards").onclick = function () {
-        document.getElementById("view").value = "card";
         document.getElementById("tableView").style.display = "none";
         document.getElementById("cardView").style.display = "flex";
+        document.getElementById("cardView").style.flexWrap = "wrap";
     };
 </script>
+
 <link href="~/Content/Site.css" rel="stylesheet" />
