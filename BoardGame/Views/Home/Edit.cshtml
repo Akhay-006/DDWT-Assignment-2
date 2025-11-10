@@ -1,7 +1,51 @@
-﻿
+﻿@using WebMatrix.Data
+
 @{
-    ViewBag.Title = "Edit";
+    var db = Database.Open("BoardGame");
+
+    var BoardGameID = Request.QueryString["id"];
+
+    // 🔹 Step 1: When the form is submitted (POST)
+    if (IsPost)
+    {
+        var newThemeName = Request.Form["themeName"];
+        var themeID = Request.Form["themeID"];
+
+        // ✅ update Theme table using ThemeID
+        var updateSql = "UPDATE Theme SET ThemeName = @0 WHERE ThemeID = @1";
+        var rowsUpdated = db.Execute(updateSql, newThemeName, themeID);
+
+        if (rowsUpdated == 1)
+        {
+            <div class='alert alert-success'>Theme updated successfully!</div>
+        }
+    }
+
+    // 🔹 Step 2: Get the current theme for this game
+    var themeSql = "SELECT t.ThemeName, t.ThemeID, b.Name FROM BoardGame AS b " +
+        "INNER JOIN GameInThemes AS gt ON b.BGGID = gt.BGGID " +
+        "INNER JOIN Theme AS t ON gt.ThemeID = t.ThemeID " +
+        "WHERE b.BGGId = @0";
+
+    var data = db.QuerySingle(themeSql, BoardGameID);
 }
 
-<h2>Edit</h2>
+<div class="bg-light py-1 mt-2">
+    <h2 class="text-center">Edit Theme for @data.Name</h2>
+</div>
 
+<form method="post" action="/Home/Edit?id=@Request.QueryString["id"]">
+    <div class="row mb-3">
+        <div class="col-6">
+            <label for="themeName">Theme Name</label>
+            <input type="text" id="themeName" name="themeName" class="form-control"
+                   value="@data.ThemeName" required />
+            <input type="hidden" name="themeID" value="@data.ThemeID" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3">
+            <button type="submit" class="btn btn-success w-100">Save</button>
+        </div>
+    </div>
+</form>

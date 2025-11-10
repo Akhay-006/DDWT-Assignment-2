@@ -6,7 +6,9 @@
     var sGName = Request.Form["searchGameName"];
     var gCategory = Request.Form["searchCategory"];
 
+    //an empty string variable named sql
     var sql = "";
+    // an empty list named data that hold any type of objects.
     var data = new List<dynamic>();
 
     // category id
@@ -38,7 +40,7 @@
                 "left JOIN GameCategory as gc ON b.BGGId = gc.BGGId " +
                 "left JOIN Category as c ON gc.Category = c.CategoryID " +
                 "WHERE c.CategoryID = @0 " +
-                "ORDER BY b.Name ASC";
+                "ORDER BY b.Name ASC ";
         data = db.Query(sql, gCategory).ToList();
     }
     // Search by Name and Category both
@@ -48,174 +50,187 @@
                 "INNER JOIN GameCategory as gc ON b.BGGId = gc.BGGId " +
                 "INNER JOIN Category as c ON gc.Category = c.CategoryID " +
                 "WHERE b.Name LIKE CONCAT(@0, '%') AND c.CategoryID = @1 " +
-                "ORDER BY b.Name ASC";
+                "ORDER BY b.Name ASC ";
         data = db.Query(sql, sGName, gCategory).ToList();
     }
 
 
 }
-<!--search button-->
-<form method="post" action="/Home/Index" class="search-container text-center mb-2">
-    <input type="hidden" name="view" id="view" />
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/Content/Site.css">
+</head>
+<body>
 
-    <div class="row align-items-center justify-content-center">
-        <div class="col-md-3 mb-2">
-            <input type="text" class="form-control" placeholder="Search by name" name="searchGameName" value="@sGName" />
-        </div>
 
-        <div class="col-md-3 mb-2">
-            <select name="searchCategory" class="form-control">
-                <option value="">Select Game Category</option>
-                @foreach (var row in categories)
-                {
-                    <option value="@row.CategoryID" @(gCategory == row.CategoryID.ToString() ? "selected" : "")>@row.Category</option>
-                }
-            </select>
-        </div>
+    <!--search button-->
+    <form method="post" action="/Home/Index" class="search-container text-center mb-2">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-md-3 mb-2">
+                <input type="text" class="form-control" placeholder="Search by name" name="searchGameName" value="@sGName" />
+            </div>
+            @*dropdown list of all categories from the database automatically highlights the previously chosen category using "selected"*@
+            <div class="col-md-3 mb-2">
+                <select name="searchCategory" class="form-control">
+                    <option value="">Select Game Category</option>
+                    @foreach (var row in categories)
+                    {
+                        <option value="@row.CategoryID" @(gCategory == row.CategoryID.ToString() ? "selected" : "")>@row.Category</option>
+                    }
+                </select>
+            </div>
 
-        <div class="col-md-2 mb-2">
-            <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-    </div>
-</form>
-
-<!--table and card view-->
-<div class="col-md-3 mb-2 d-flex justify-content-start gap-2">
-    <button type="button" class="btn btn-primary" id="showTable">Table</button>
-    <button type="button" class="btn btn-secondary" id="showCards">Card</button>
-</div>
-
-<!-- Heading for the game data-->
-<div class="card text-bg-light py-1 mt-2 col-12 mx-auto">
-    <h2 class="text-center">Collection of Board Games</h2>
-</div>
-<!--table-->
-<div id="tableView" class="col-12 mx-auto mt-2" style="display: block;">
-    <table class="table table-bordered">
-        @if (data.Any())
-        {
-            <thead>
-                <tr>
-                    <th scope="col">Id</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Year Published</th>
-                    <th scope="col">Game Weight</th>
-                    <th scope="col">Min Players</th>
-                    <th scope="col">Max Players</th>
-                    <th scope="col">Age</th>
-                    <th scope="col">Language Ease</th>
-                    <th scope="col">Best Players</th>
-                    <th scope="col">Number Owned</th>
-                    <th scope="col">Number Want</th>
-                    <th scope="col">Number Wish</th>
-                    <th scope="col">Mfg Playtime</th>
-                    <th scope="col">Min Playtime</th>
-                    <th scope="col">Max Playtime</th>
-                    <th scope="col">Mfg Age Rec</th>
-                    <th scope="col">Number Alternates</th>
-                    <th scope="col">Number Expansions</th>
-                    <th scope="col">Number Implementations</th>
-                    <th scope="col">Family</th>
-                    <th scope="col">Rank in Board Game</th>
-                    <th scope="col">Rank in Strategy Games</th>
-                    <th scope="col">Rank in Family Games</th>
-                    <th scope="col">Rank in Thematic</th>
-                    <th scope="col">Game Image</th>
-                    <th scope="col">More Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var row in data)
-                {
-                    <tr>
-                        <th scope="row">@row.BGGId</th>
-                        <td>@row.Name</td>
-                        <td title="@row.Description">
-                            @(row.Description.Length > 30 ? row.Description.Substring(0, 50) + "..." : row.Description)
-                        </td>
-                        <td>@row.YearPublished</td>
-                        <td>@row.GameWeight</td>
-                        <td>@row.MinPlayers</td>
-                        <td>@row.MaxPlayers</td>
-                        <td>@row.ComAgeRec</td>
-                        <td>@row.LanguageEase</td>
-                        <td>@row.BestPlayers</td>
-                        <td>@row.NumOwned</td>
-                        <td>@row.NumWant</td>
-                        <td>@row.NumWish</td>
-                        <td>@row.MfgPlaytime</td>
-                        <td>@row.ComMinPlaytime</td>
-                        <td>@row.ComMaxPlaytime</td>
-                        <td>@row.MfgAgeRec</td>
-                        <td>@row.NumAlternates</td>
-                        <td>@row.NumExpansions</td>
-                        <td>@row.NumImplementations</td>
-                        <td>@row.Family</td>
-                        <td>@row.RankInboardgame</td>
-                        <td>@row.RankInstrategygames</td>
-                        <td>@row.RankInfamilygames</td>
-                        <td>@row.RankInthematic</td>
-                        <td><img src="@row.ImagePath" class="img-fluid" alt="@row.Name"></td>
-                        <td> <a href="/Home/Details?id=@row.BGGId" class="btn btn-primary btn-sm">Game Detail</a></td>
-                    </tr>
-                }
-            </tbody>
-        }
-        else
-        {
-            <tr><td colspan="27" class="text-center text-danger">Oops! No records were found ...</td></tr>
-        }
-    </table>
-</div>
-<!--card-->
-<div id="cardView" class="row justify-content-center" style="display: none;">
-    @foreach (var row in data)
-    {
-        <div class="card col-md-3 m-2 shadow-sm">
-            <img src="@row.ImagePath" class="img-fluid" alt="@row.Name">
-            <div class="card-body">
-                <h5 class="card-title">@row.BGGId</h5>
-                <h5 class="card-title">@row.Name</h5>
-                <p class="card-text text-truncate">@row.Description</p>
-                <p class="card-text">Year Published: @row.YearPublished</p>
-                <p class="card-text">Game Weight: @row.GameWeight</p>
-                <p class="card-text">Min Players: @row.MinPlayers</p>
-                <p class="card-text">Max Players: @row.MaxPlayers</p>
-                <p class="card-text">Age: @row.ComAgeRec</p>
-                <p class="card-text">Language Ease: @row.LanguageEase</p>
-                <p class="card-text">Best Players: @row.BestPlayers</p>
-                <p class="card-text">Number Owned: @row.NumOwned</p>
-                <p class="card-text">Number Want: @row.NumWant</p>
-                <p class="card-text">Number Wish: @row.NumWish</p>
-                <p class="card-text">Mfg Playtime: @row.MfgPlaytime</p>
-                <p class="card-text">Com Min Playtime: @row.ComMinPlaytime</p>
-                <p class="card-text">Com Max Playtime: @row.ComMaxPlaytime</p>
-                <p class="card-text">Mfg Age Rec: @row.MfgAgeRec</p>
-                <p class="card-text">Number Alternates: @row.NumAlternates</p>
-                <p class="card-text">Number Expansions: @row.NumExpansions</p>
-                <p class="card-text">Number Implementations: @row.NumImplementations</p>
-                <p class="card-text">Family: @row.Family</p>
-                <p class="card-text">Rank in Board Game: @row.RankInboardgame</p>
-                <p class="card-text">Rank in Strategy Games: @row.RankInstrategygames</p>
-                <p class="card-text">Rank in Family Games: @row.RankInfamilygames</p>
-                <p class="card-text">Rank in Thematic: @row.RankInthematic</p>
-                <a href="/Home/Details?id=@row.BGGId" class="btn btn-primary">Game Detail</a>
+            <div class="col-md-2 mb-2">
+                <button type="submit" class="btn btn-primary">Search</button>
             </div>
         </div>
-    }
-</div>
+    </form>
 
-<script>document.getElementById("showTable").onclick = function () {
-        document.getElementById("tableView").style.display = "block";
-        document.getElementById("cardView").style.display = "none";
-    };
+    <!--table and card view-->
+    <div class="col-md-3 mb-2 d-flex justify-content-start gap-2">
+        <button type="button" class="btn btn-primary" id="showTable">Table</button>
+        <button type="button" class="btn btn-secondary" id="showCards">Card</button>
+    </div>
 
-    document.getElementById("showCards").onclick = function () {
-        document.getElementById("tableView").style.display = "none";
-        document.getElementById("cardView").style.display = "flex";
-        document.getElementById("cardView").style.flexWrap = "wrap";
-    };
-</script>
+    <!-- Heading for the game data-->
+    <div class="card text-bg-light py-1 mt-2 col-12 mx-auto">
+        <h2 class="text-center">Collection of Board Games</h2>
+    </div>
+    <!--table-->
+    <div id="tableView" class="col-12 mx-auto mt-2" style="display: block;">
+        <table class="table table-bordered">
+            @if (data.Any())
+            {
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Year Published</th>
+                        <th scope="col">Game Weight</th>
+                        <th scope="col">Min Players</th>
+                        <th scope="col">Max Players</th>
+                        <th scope="col">Age</th>
+                        <th scope="col">Language Ease</th>
+                        <th scope="col">Best Players</th>
+                        <th scope="col">Number Owned</th>
+                        <th scope="col">Number Want</th>
+                        <th scope="col">Number Wish</th>
+                        <th scope="col">Mfg Playtime</th>
+                        <th scope="col">Min Playtime</th>
+                        <th scope="col">Max Playtime</th>
+                        <th scope="col">Mfg Age Rec</th>
+                        <th scope="col">Number Alternates</th>
+                        <th scope="col">Number Expansions</th>
+                        <th scope="col">Number Implementations</th>
+                        <th scope="col">Family</th>
+                        <th scope="col">Rank in Board Game</th>
+                        <th scope="col">Rank in Strategy Games</th>
+                        <th scope="col">Rank in Family Games</th>
+                        <th scope="col">Rank in Thematic</th>
+                        <th scope="col">Game Image</th>
+                        <th scope="col">More Details</th>
+                        <th scope="col">Edit Game Theme</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in data)
+                    {
+                        <tr>
+                            <th scope="row">@row.BGGId</th>
+                            <td>@row.Name</td>
+                            <td title="@row.Description">
+                                @(row.Description.Length > 30 ? row.Description.Substring(0, 50) + "..." : row.Description)
+                            </td>
+                            <td>@row.YearPublished</td>
+                            <td>@row.GameWeight</td>
+                            <td>@row.MinPlayers</td>
+                            <td>@row.MaxPlayers</td>
+                            <td>@row.ComAgeRec</td>
+                            <td>@row.LanguageEase</td>
+                            <td>@row.BestPlayers</td>
+                            <td>@row.NumOwned</td>
+                            <td>@row.NumWant</td>
+                            <td>@row.NumWish</td>
+                            <td>@row.MfgPlaytime</td>
+                            <td>@row.ComMinPlaytime</td>
+                            <td>@row.ComMaxPlaytime</td>
+                            <td>@row.MfgAgeRec</td>
+                            <td>@row.NumAlternates</td>
+                            <td>@row.NumExpansions</td>
+                            <td>@row.NumImplementations</td>
+                            <td>@row.Family</td>
+                            <td>@row.RankInboardgame</td>
+                            <td>@row.RankInstrategygames</td>
+                            <td>@row.RankInfamilygames</td>
+                            <td>@row.RankInthematic</td>
+                            <td><img src="@row.ImagePath" class="img-fluid" alt="@row.Name"></td>
+                            <td> <a href="/Home/Details?id=@row.BGGId" class="btn btn-primary btn-sm">Game Detail</a></td>
+                            <td> <a href="/Home/Edit?id=@row.BGGId" class="btn btn-primary btn-sm">Edit Game Theme</a></td>
+                        </tr>
+                    }
+                </tbody>
+            }
+            else
+            {
+                <tr><td colspan="27" class="text-center text-danger">Oops! No records were found ...</td></tr>
+            }
+        </table>
+    </div>
+    <!--card-->
+    <div id="cardView" class="row justify-content-center" style="display: none;">
+        @foreach (var row in data)
+        {
+            <div class="card col-md-3 m-2 shadow-sm">
+                <img src="@row.ImagePath" class="img-fluid" alt="@row.Name">
+                <div class="card-body">
+                    <h5 class="card-title">@row.BGGId</h5>
+                    <h5 class="card-title">@row.Name</h5>
+                    <p class="card-text text-truncate">@row.Description</p>
+                    <p class="card-text">Year Published: @row.YearPublished</p>
+                    <p class="card-text">Game Weight: @row.GameWeight</p>
+                    <p class="card-text">Min Players: @row.MinPlayers</p>
+                    <p class="card-text">Max Players: @row.MaxPlayers</p>
+                    <p class="card-text">Age: @row.ComAgeRec</p>
+                    <p class="card-text">Language Ease: @row.LanguageEase</p>
+                    <p class="card-text">Best Players: @row.BestPlayers</p>
+                    <p class="card-text">Number Owned: @row.NumOwned</p>
+                    <p class="card-text">Number Want: @row.NumWant</p>
+                    <p class="card-text">Number Wish: @row.NumWish</p>
+                    <p class="card-text">Mfg Playtime: @row.MfgPlaytime</p>
+                    <p class="card-text">Com Min Playtime: @row.ComMinPlaytime</p>
+                    <p class="card-text">Com Max Playtime: @row.ComMaxPlaytime</p>
+                    <p class="card-text">Mfg Age Rec: @row.MfgAgeRec</p>
+                    <p class="card-text">Number Alternates: @row.NumAlternates</p>
+                    <p class="card-text">Number Expansions: @row.NumExpansions</p>
+                    <p class="card-text">Number Implementations: @row.NumImplementations</p>
+                    <p class="card-text">Family: @row.Family</p>
+                    <p class="card-text">Rank in Board Game: @row.RankInboardgame</p>
+                    <p class="card-text">Rank in Strategy Games: @row.RankInstrategygames</p>
+                    <p class="card-text">Rank in Family Games: @row.RankInfamilygames</p>
+                    <p class="card-text">Rank in Thematic: @row.RankInthematic</p>
+                    <a href="/Home/Details?id=@row.BGGId" class="btn btn-primary">Game Detail</a>
+                    <a href="/Home/Edit?id=@row.BGGId" class="btn btn-primary btn-sm">Edit Game Theme</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <script>document.getElementById("showTable").onclick = function () {
+            document.getElementById("tableView").style.display = "block";
+            document.getElementById("cardView").style.display = "none";
+        };
+
+        document.getElementById("showCards").onclick = function () {
+            document.getElementById("tableView").style.display = "none";
+            document.getElementById("cardView").style.display = "flex";
+            document.getElementById("cardView").style.flexWrap = "wrap";
+        };</script>
+
+</body>
+</html>
 
 <link href="~/Content/Site.css" rel="stylesheet" />
