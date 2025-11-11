@@ -3,6 +3,9 @@
 @{
     var db = Database.Open("BoardGame");
     var id = Request.QueryString["id"];
+    string message = "";
+    string alert = "";
+    bool addButton = false;
 
     // family dropdown data 
     var familySql = "SELECT DISTINCT Family FROM GameFamily WHERE Family IS NOT NULL ORDER BY Family ASC";
@@ -22,6 +25,10 @@
 
     if (IsPost)
     {
+        var action = Request.Form["action"];
+        var selectedFamily = Request.Form["Family"];
+        var enteredTheme = Request.Form["ThemeName"];
+
         // Update BoardGame record 
         var updateSql = "UPDATE BoardGame SET Name=@0, Description=@1, YearPublished=@2, GameWeight=@3, " +
                         "MinPlayers=@4, MaxPlayers=@5, ComAgeRec=@6, LanguageEase=@7,BestPlayers=@8, NumOwned=@9, NumWant=@10, NumWish=@11, " + 
@@ -117,6 +124,10 @@
         <h2 class="text-center">Edit Board Game</h2>
     </div>
 
+    @if (!String.IsNullOrEmpty(message))
+    {
+        <div class="alert @alert text-center">@message</div>
+    }
 
     <form method="post" action="/Home/Edit?id=@id">
         <div class="row mb-2">
@@ -252,6 +263,13 @@
             <div class="col-3 text-right">
                 <button type="submit" name="action" value="update" class="btn btn-success w-100">Save Changes</button>
             </div>
+            @if (addButton)
+            {
+                <div class="col-3 text-right">
+                    <button type="submit" name="action" value="addtheme" class="btn btn-warning w-100">Add Theme</button>
+                    <input type="hidden" name="NewTheme" value="@Request.Form["ThemeName"]" />
+                </div>
+            }
             <div class="col-3 text-right">
                 <a href="/Home/Details?id=@id" class="btn btn-secondary w-100">Cancel</a>
             </div>
