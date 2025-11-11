@@ -1,1 +1,19 @@
-﻿
+﻿@using WebMatrix.Data
+
+@{
+    var db = Database.Open("BoardGame");
+    var id = Request.QueryString["id"];
+
+    var familySql = "SELECT DISTINCT Family FROM GameFamily WHERE Family IS NOT NULL ORDER BY Family ASC";
+    var families = db.Query(familySql);
+
+    var themeSql = "SELECT DISTINCT * FROM Theme ORDER BY ThemeName ASC";
+    var themes = db.Query(themeSql);
+
+    var sql = @"SELECT b.*, t.ThemeName
+        FROM BoardGame AS b
+        LEFT JOIN GameInThemes AS gt ON b.BGGId = gt.BGGId
+        LEFT JOIN Theme AS t ON gt.ThemeID = t.ThemeID
+        WHERE b.BGGId = @0";
+    var data = db.QuerySingle(sql, id);
+}
