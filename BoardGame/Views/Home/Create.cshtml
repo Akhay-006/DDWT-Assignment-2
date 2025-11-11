@@ -84,166 +84,176 @@
     }
 }
 
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/Content/Site.css">
+</head>
+<body>
 
-<div class="card text-bg-light py-1 mt-2 col-12 mx-auto">
-    <h2 class="text-center">Add New Board Game</h2>
-</div>
-
-<form method="post" action="~/Home/Create">
-    <div class="row mb-2">
-        <div class="col-9">
-            <label for="Name">Name</label>
-            <input type="text" id="Name" name="Name" class="form-control" maxlength="200" required />
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-6">
-            <label for="ThemeName">Theme Name</label>
-            <input type="text" id="ThemeName" name="ThemeName" class="form-control" placeholder="Enter a theme name" />
-        </div>
-        <div class="col-md-6">
-            <label for="ThemeSelect" class="form-label">Select Existing Theme</label>
-            <select id="ThemeSelect" name="ThemeID" class="form-select">
-                <option value="">Select Theme</option>
-                @foreach (var theme in tData)
-                {
-                    <option value="@theme.ThemeID">@theme.ThemeName</option>
-                }w
-            </select>
-        </div>
+    <div class="card text-bg-light py-1 mt-2 col-12 mx-auto">
+        <h2 class="text-center">Add New Board Game</h2>
     </div>
 
-    <div class="row mb-2">
-        <div class="col">
-            <label for="Description">Description</label>
-            <textarea id="Description" name="Description" class="form-control" rows="4" maxlength="2000" placeholder="Enter board game description..."></textarea>
+    <form method="post" action="~/Home/Create">
+        <div class="row mb-2">
+            <div class="col-9">
+                <label for="Name">Name</label>
+                <input type="text" id="Name" name="Name" class="form-control" maxlength="200" required />
+            </div>
         </div>
-    </div>
-
-    <div class="row mb-2">
-        <div class="col-3">
-            <label for="YearPublished">Year Published</label>
-            <input type="number" id="YearPublished" name="YearPublished" class="form-control" min="1800" max="2100" />
-        </div>
-        <div class="col-3">
-            <label for="GameWeight">Game Weight</label>
-            <input type="number" id="GameWeight" name="GameWeight" step="0.1" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="MinPlayers">Min Players</label>
-            <input type="number" id="MinPlayers" name="MinPlayers" class="form-control" min="1" />
-        </div>
-        <div class="col-3">
-            <label for="MaxPlayers">Max Players</label>
-            <input type="number" id="MaxPlayers" name="MaxPlayers" class="form-control" min="1" />
-        </div>
-    </div>
-
-    <div class="row mb-2">
-        <div class="col-3">
-            <label for="Age">Age</label>
-            <input type="number" id="Age" name="Age" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="LanguageEase">Language Ease</label>
-            <input type="number" id="LanguageEase" name="LanguageEase" step="0.1" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="BestPlayers">Best Players</label>
-            <input type="text" id="BestPlayers" name="BestPlayers" class="form-control" />
+        <div class="row mb-2">
+            <div class="col-6">
+                <label for="ThemeName">Theme Name</label>
+                <input type="text" id="ThemeName" name="ThemeName" class="form-control" placeholder="Enter a theme name" />
+            </div>
+            <div class="col-md-6">
+                <label for="ThemeSelect" class="form-label">Select Existing Theme</label>
+                <select id="ThemeSelect" name="ThemeID" class="form-select">
+                    <option value="">Select Theme</option>
+                    @foreach (var theme in tData)
+                    {
+                        <option value="@theme.ThemeID">@theme.ThemeName</option>
+                    }w
+                </select>
+            </div>
         </div>
 
-    </div>
+        <div class="row mb-2">
+            <div class="col">
+                <label for="Description">Description</label>
+                <textarea id="Description" name="Description" class="form-control" rows="4" maxlength="2000" placeholder="Enter board game description..."></textarea>
+            </div>
+        </div>
 
-    <div class="row mb-2">
-        <div class="col-3">
-            <label for="NumOwned">Number Owned</label>
-            <input type="number" id="NumOwned" name="NumOwned" class="form-control" />
+        <div class="row mb-2">
+            <div class="col-3">
+                <label for="YearPublished">Year Published</label>
+                <input type="number" id="YearPublished" name="YearPublished" class="form-control" min="1800" max="2100" />
+            </div>
+            <div class="col-3">
+                <label for="GameWeight">Game Weight</label>
+                <input type="number" id="GameWeight" name="GameWeight" step="0.1" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="MinPlayers">Min Players</label>
+                <input type="number" id="MinPlayers" name="MinPlayers" class="form-control" min="1" />
+            </div>
+            <div class="col-3">
+                <label for="MaxPlayers">Max Players</label>
+                <input type="number" id="MaxPlayers" name="MaxPlayers" class="form-control" min="1" />
+            </div>
         </div>
-        <div class="col-3">
-            <label for="NumWant">Number Want</label>
-            <input type="number" id="NumWant" name="NumWant" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="NumWish">Number Wish</label>
-            <input type="number" id="NumWish" name="NumWish" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="ImagePath">Image URL</label>
-            <input type="text" id="ImagePath" name="ImagePath" class="form-control" placeholder="Enter image link" />
-        </div>
-    </div>
 
-<div class="row mb-2">
-        <div class="col-3">
-            <label for="MfgPlaytime">Mfg Playtime</label>
-            <input type="number" id="MfgPlaytime" name="MfgPlaytime" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="Playtime">Min Playtime</label>
-            <input type="number" id="MinPlaytime" name="MinPlaytime" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="MaxPlaytime">Max Playtime</label>
-            <input type="number" id="MaxPlaytime" name="MaxPlaytime" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="MfgAgeRec">Mfg Age Rec</label>
-            <input type="number" id="MfgAgeRec" name="MfgAgeRec" class="form-control" />
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-3">
-            <label for="NumAlternates">Number Alternates</label>
-            <input type="number" id="NumAlternates" name="NumAlternates" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="NumExpansions">Number Expansions</label>
-            <input type="number" id="NumExpansions" name="NumExpansions" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="NumImplementations">Number Implementations</label>
-            <input type="number" id="NumImplementations" name="NumImplementations" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="RankInboardgame">Rank in Boardgame</label>
-            <input type="number" id="RankInboardgame" name="RankInboardgame" class="form-control" />
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-6">
-            <label for="Family">Select Game Family</label>
-            <select id="Family" name="Family" class="form-control" required>
-                <option value="">Select a Family</option>
-                @foreach (var row in family)
-                {
-                    <option value="@row.Family">@row.Family</option>
-                }
-            </select>
-        </div>
-    </div>
+        <div class="row mb-2">
+            <div class="col-3">
+                <label for="Age">Age</label>
+                <input type="number" id="Age" name="Age" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="LanguageEase">Language Ease</label>
+                <input type="number" id="LanguageEase" name="LanguageEase" step="0.1" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="BestPlayers">Best Players</label>
+                <input type="text" id="BestPlayers" name="BestPlayers" class="form-control" />
+            </div>
 
-    <div class="row mb-2">
-        <div class="col-3">
-            <label for="RankInstrategygames">Rank in Strategy Games</label>
-            <input type="number" id="RankInstrategygames" name="RankInstrategygames" class="form-control" />
         </div>
-        <div class="col-3">
-            <label for="RankInfamilygames">Rank in Family Games</label>
-            <input type="number" id="RankInfamilygames" name="RankInfamilygames" class="form-control" />
-        </div>
-        <div class="col-3">
-            <label for="RankInthematic">Rank in Thematic</label>
-            <input type="number" id="RankInthematic" name="RankInthematic" class="form-control" />
-        </div>
-    </div>
 
-    <div class="row mb-2 justify-content-end">
-        <div class="col-3 text-right">
-            <button type="submit" name="action" class="btn btn-success w-100">Save</button>
+        <div class="row mb-2">
+            <div class="col-3">
+                <label for="NumOwned">Number Owned</label>
+                <input type="number" id="NumOwned" name="NumOwned" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="NumWant">Number Want</label>
+                <input type="number" id="NumWant" name="NumWant" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="NumWish">Number Wish</label>
+                <input type="number" id="NumWish" name="NumWish" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="ImagePath">Image URL</label>
+                <input type="text" id="ImagePath" name="ImagePath" class="form-control" placeholder="Enter image link" />
+            </div>
         </div>
-        <div class="col-3 text-right">
-            <button type="reset" class="btn btn-danger w-100">Clear</button>
+
+        <div class="row mb-2">
+            <div class="col-3">
+                <label for="MfgPlaytime">Mfg Playtime</label>
+                <input type="number" id="MfgPlaytime" name="MfgPlaytime" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="Playtime">Min Playtime</label>
+                <input type="number" id="MinPlaytime" name="MinPlaytime" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="MaxPlaytime">Max Playtime</label>
+                <input type="number" id="MaxPlaytime" name="MaxPlaytime" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="MfgAgeRec">Mfg Age Rec</label>
+                <input type="number" id="MfgAgeRec" name="MfgAgeRec" class="form-control" />
+            </div>
         </div>
-    </div>
-</form>
+        <div class="row mb-2">
+            <div class="col-3">
+                <label for="NumAlternates">Number Alternates</label>
+                <input type="number" id="NumAlternates" name="NumAlternates" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="NumExpansions">Number Expansions</label>
+                <input type="number" id="NumExpansions" name="NumExpansions" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="NumImplementations">Number Implementations</label>
+                <input type="number" id="NumImplementations" name="NumImplementations" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="RankInboardgame">Rank in Boardgame</label>
+                <input type="number" id="RankInboardgame" name="RankInboardgame" class="form-control" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-6">
+                <label for="Family">Select Game Family</label>
+                <select id="Family" name="Family" class="form-control" required>
+                    <option value="">Select a Family</option>
+                    @foreach (var row in family)
+                    {
+                        <option value="@row.Family">@row.Family</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-3">
+                <label for="RankInstrategygames">Rank in Strategy Games</label>
+                <input type="number" id="RankInstrategygames" name="RankInstrategygames" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="RankInfamilygames">Rank in Family Games</label>
+                <input type="number" id="RankInfamilygames" name="RankInfamilygames" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label for="RankInthematic">Rank in Thematic</label>
+                <input type="number" id="RankInthematic" name="RankInthematic" class="form-control" />
+            </div>
+        </div>
+
+        <div class="row mb-2 justify-content-end">
+            <div class="col-3 text-right">
+                <button type="submit" name="action" class="btn btn-success w-100">Save</button>
+            </div>
+            <div class="col-3 text-right">
+                <button type="reset" class="btn btn-danger w-100">Clear</button>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
