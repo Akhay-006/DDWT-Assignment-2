@@ -3,15 +3,17 @@
 @{
     var db = Database.Open("BoardGame");
     var id = Request.QueryString["id"];
-    var sql = "SELECT b.*, c.Category, agg.AV, agg.VR FROM BoardGame AS b " +
-              "INNER JOIN GameCategory AS gc ON b.BGGId = gc.BGGId " +
-              "INNER JOIN Category AS c ON gc.Category = c.CategoryID " +
-              "LEFT JOIN (SELECT BGGId, ROUND(AVG(Rating), 1) AS AV, COUNT(Rating) AS VR " +
-              "FROM UserRating " +
-              "GROUP BY BGGId) AS agg ON b.BGGId = agg.BGGId " +
-              "WHERE b.BGGId LIKE @0";
+
+    var sql = "SELECT b.*, c.Category AS Category, agg.AV, agg.VR FROM BoardGame AS b " +
+               "LEFT JOIN GameCategory AS gc ON b.BGGId = gc.BGGId " +
+               "LEFT JOIN Category AS c ON gc.Category = c.CategoryID " + 
+               "LEFT JOIN (SELECT BGGId, ROUND(AVG(Rating), 1) AS AV, COUNT(Rating) AS VR FROM UserRating " +
+               "GROUP BY BGGId) AS agg ON b.BGGId = agg.BGGId " + 
+               "WHERE b.BGGId = @0 ";
+
     var row = db.QuerySingle(sql, id);
 }
+
 <!doctype html>
 <html lang="en">
 <head>
