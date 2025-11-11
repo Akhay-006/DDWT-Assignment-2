@@ -22,7 +22,6 @@
 
     if (IsPost)
     {
-
         // Update BoardGame record 
         var updateSql = "UPDATE BoardGame SET Name=@0, Description=@1, YearPublished=@2, GameWeight=@3, " +
                         "MinPlayers=@4, MaxPlayers=@5, ComAgeRec=@6, LanguageEase=@7,BestPlayers=@8, NumOwned=@9, NumWant=@10, NumWish=@11, " + 
@@ -58,5 +57,205 @@
             Request.Form["RankInfamilygames"],
             Request.Form["RankInthematic"],
             id);
+
+        if (action == "update")
+        {
+            if (!String.IsNullOrWhiteSpace(enteredTheme))
+            {
+                var themeId = db.QueryValue("SELECT ThemeID FROM Theme WHERE ThemeName=@0", enteredTheme);
+
+                if (themeId == null)
+                {
+                    // theme doesn’t exist
+                    message = $"Theme '{enteredTheme}' does not exist. Click 'Add Theme' to create it.";
+                    alert = "alert-warning";
+                    addButton = true;
+                }
+                else
+                {
+                    // theme exists
+                    db.Execute("UPDATE GameInThemes SET ThemeID=@0 WHERE BGGId=@1", themeId, id);
+                    message = "Game updated successfully.";
+                    alert = "alert-success";
+                }
+            }
+            else
+            {
+                message = "Game details updated successfully.";
+                alert = "alert-success";
+            }
+        }
+        else if (action == "addtheme")
+        {
+            // add new theme
+            var newTheme = Request.Form["NewTheme"];
+            var lastId = db.QueryValue("SELECT MAX(CAST(SUBSTRING(ThemeID, 2, LEN(ThemeID)) AS INT)) FROM Theme");
+            var newThemeId = "T" + ((lastId == null ? 1 : (int)lastId + 1));
+
+            db.Execute("INSERT INTO Theme (ThemeID, ThemeName) VALUES (@0, @1)", newThemeId, newTheme);
+            db.Execute("UPDATE GameInThemes SET ThemeID=@0 WHERE BGGId=@1", newThemeId, id);
+
+            message = $"New theme '{newTheme}' added and linked successfully!";
+            alert = "alert-success";
+            addButton = false;
+        }
+
+        data = db.QuerySingle(sql, id);
+    }
 }
 
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/Content/Site.css">
+</head>
+<body>
+
+    <div class="card text-bg-light py-1 mt-2 col-12 mx-auto">
+        <h2 class="text-center">Edit Board Game</h2>
+    </div>
+
+
+    <form method="post" action="/Home/Edit?id=@id">
+        <div class="row mb-2">
+            <div class="col-3">
+                <label for="BGGId">BGG ID</label>
+                <input type="text" id="BGGId" class="form-control" value="@data.BGGId" readonly />
+                <input type="hidden" name="id" value="@data.BGGId" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-9">
+                <label for="Name">Name</label>
+                <input type="text" id="Name" name="Name" class="form-control" value="@data.Name" readonly />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-6">
+                <label for="ThemeName">Type Theme Name or </label>
+                <input type="text" id="ThemeName" name="ThemeName" class="form-control" placeholder="Enter a theme name" />
+            </div>
+            <div class="col-md-6">
+                <label for="ThemeSelect" class="form-label">Select Existing Theme</label>
+                <select id="ThemeSelect" name="ThemeID" class="form-select">
+                    <option value="">Select a Theme</option>
+                    @foreach (var theme in themes)
+                    {
+                        <option value="@theme.ThemeID" @(theme.ThemeName == data.ThemeName ? "selected" : "")>@theme.ThemeName</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col">
+                <label for="Description">Description</label>
+                <textarea id="Description" name="Description" class="form-control" rows="4" readonly>@data.Description</textarea>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-3"><label>Year Published</label>
+                <input type="number" name="YearPublished" class="form-control" value="@data.YearPublished" />
+            </div>
+            <div class="col-3"><label>Game Weight</label>
+                <input type="number" name="GameWeight" step="0.1" class="form-control" value="@data.GameWeight" />
+            </div>
+            <div class="col-3"><label>Min Players</label>
+                <input type="number" name="MinPlayers" class="form-control" value="@data.MinPlayers" />
+            </div>
+            <div class="col-3"><label>Max Players</label>
+                <input type="number" name="MaxPlayers" class="form-control" value="@data.MaxPlayers" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-3"><label>Age</label>
+                <input type="number" name="ComAgeRec" class="form-control" value="@data.ComAgeRec" />
+            </div>
+            <div class="col-3"><label>Language Ease</label>
+                <input type="number" name="LanguageEase" step="0.1" class="form-control" value="@data.LanguageEase" />
+            </div>
+            <div class="col-3"><label>Best Players</label>
+                <input type="text" name="BestPlayers" class="form-control" value="@data.BestPlayers" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-3"><label>Number Owned</label>
+                <input type="number" name="NumOwned" class="form-control" value="@data.NumOwned" />
+            </div>
+            <div class="col-3"><label>Number Want</label>
+                <input type="number" name="NumWant" class="form-control" value="@data.NumWant" />
+            </div>
+            <div class="col-3"><label>Number Wish</label>
+                <input type="number" name="NumWish" class="form-control" value="@data.NumWish" />
+            </div>
+            <div class="col-3"><label>Image URL</label>
+                <input type="text" name="ImagePath" class="form-control" value="@data.ImagePath" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-3"><label>Mfg Playtime</label>
+                <input type="number" name="MfgPlaytime" class="form-control" value="@data.MfgPlaytime" />
+            </div>
+            <div class="col-3"><label>Min Playtime</label>
+                <input type="number" name="MinPlaytime" class="form-control" value="@data.ComMinPlaytime" />
+            </div>
+            <div class="col-3"><label>Max Playtime</label>
+                <input type="number" name="MaxPlaytime" class="form-control" value="@data.ComMaxPlaytime" />
+            </div>
+            <div class="col-3"><label>Mfg Age Rec</label>
+                <input type="number" name="MfgAgeRec" class="form-control" value="@data.MfgAgeRec" />
+            </div>
+        </div>
+
+
+        <div class="row mb-2">
+            <div class="col-3"><label>Number Alternates</label>
+                <input type="number" name="NumAlternates" class="form-control" value="@data.NumAlternates" />
+            </div>
+            <div class="col-3"><label>Number Expansions</label>
+                <input type="number" name="NumExpansions" class="form-control" value="@data.NumExpansions" />
+            </div>
+            <div class="col-3"><label>Number Implementations</label>
+                <input type="number" name="NumImplementations" class="form-control" value="@data.NumImplementations" />
+            </div>
+            <div class="col-3"><label>Rank in Boardgame</label>
+                <input type="number" name="RankInboardgame" class="form-control" value="@data.RankInboardgame" />
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-6">
+                <label>Select Game Family</label>
+                <select name="Family" class="form-control">
+                    <option value="">Select a Family</option>
+                    @foreach (var f in families)
+                    {
+                        <option value="@f.Family" @(f.Family == data.Family ? "selected" : "")>@f.Family</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-3"><label>Rank in Strategy Games</label>
+                <input type="number" name="RankInstrategygames" class="form-control" value="@data.RankInstrategygames" />
+            </div>
+            <div class="col-3"><label>Rank in Family Games</label>
+                <input type="number" name="RankInfamilygames" class="form-control" value="@data.RankInfamilygames" />
+            </div>
+            <div class="col-3"><label>Rank in Thematic</label>
+                <input type="number" name="RankInthematic" class="form-control" value="@data.RankInthematic" />
+            </div>
+        </div>
+
+        <div class="row mb-2 justify-content-end">
+            <div class="col-3 text-right">
+                <button type="submit" name="action" value="update" class="btn btn-success w-100">Save Changes</button>
+            </div>
+            <div class="col-3 text-right">
+                <a href="/Home/Details?id=@id" class="btn btn-secondary w-100">Cancel</a>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
