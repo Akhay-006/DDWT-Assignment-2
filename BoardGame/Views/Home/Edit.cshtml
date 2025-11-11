@@ -4,16 +4,59 @@
     var db = Database.Open("BoardGame");
     var id = Request.QueryString["id"];
 
+    // family dropdown data 
     var familySql = "SELECT DISTINCT Family FROM GameFamily WHERE Family IS NOT NULL ORDER BY Family ASC";
     var families = db.Query(familySql);
 
+    // theme dropdown data 
     var themeSql = "SELECT DISTINCT * FROM Theme ORDER BY ThemeName ASC";
     var themes = db.Query(themeSql);
 
+    // selected game details 
     var sql = @"SELECT b.*, t.ThemeName
         FROM BoardGame AS b
         LEFT JOIN GameInThemes AS gt ON b.BGGId = gt.BGGId
         LEFT JOIN Theme AS t ON gt.ThemeID = t.ThemeID
         WHERE b.BGGId = @0";
     var data = db.QuerySingle(sql, id);
+
+    if (IsPost)
+    {
+
+        // Update BoardGame record 
+        var updateSql = "UPDATE BoardGame SET Name=@0, Description=@1, YearPublished=@2, GameWeight=@3, " +
+                        "MinPlayers=@4, MaxPlayers=@5, ComAgeRec=@6, LanguageEase=@7,BestPlayers=@8, NumOwned=@9, NumWant=@10, NumWish=@11, " + 
+                        "MfgPlaytime=@12, ComMinPlaytime=@13, ComMaxPlaytime=@14, MfgAgeRec=@15, NumAlternates=@16, NumExpansions=@17, " +
+                        "NumImplementations=@18, Family=@19, ImagePath=@20, RankInboardgame=@21, RankInstrategygames=@22, " +
+                        "RankInfamilygames=@23, RankInthematic=@24 " +
+                        "WHERE BGGId=@25";
+
+        db.Execute(updateSql,
+            Request.Form["Name"],
+            Request.Form["Description"],
+            Request.Form["YearPublished"],
+            Request.Form["GameWeight"],
+            Request.Form["MinPlayers"],
+            Request.Form["MaxPlayers"],
+            Request.Form["ComAgeRec"],
+            Request.Form["LanguageEase"],
+            Request.Form["BestPlayers"],
+            Request.Form["NumOwned"],
+            Request.Form["NumWant"],
+            Request.Form["NumWish"],
+            Request.Form["MfgPlaytime"],
+            Request.Form["MinPlaytime"],
+            Request.Form["MaxPlaytime"],
+            Request.Form["MfgAgeRec"],
+            Request.Form["NumAlternates"],
+            Request.Form["NumExpansions"],
+            Request.Form["NumImplementations"],
+            selectedFamily,
+            Request.Form["ImagePath"],
+            Request.Form["RankInboardgame"],
+            Request.Form["RankInstrategygames"],
+            Request.Form["RankInfamilygames"],
+            Request.Form["RankInthematic"],
+            id);
 }
+
